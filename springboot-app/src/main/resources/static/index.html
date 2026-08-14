@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stock Ledger — Product Catalog</title>
+<style>
+  :root{
+    --ink:#1f2421;
+    --paper:#eae6da;
+    --paper-dark:#ddd7c4;
+    --bg:#14181a;
+    --bg-raise:#1b2124;
+    --mustard:#d6a419;
+    --teal:#3e7c74;
+    --red-stamp:#a1432f;
+    --line: rgba(31,36,33,0.16);
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(214,164,25,0.06), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(62,124,116,0.08), transparent 45%);
+    color:var(--paper);
+    font-family:'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height:100vh;
+    padding:48px 20px 80px;
+  }
+
+  .wrap{ max-width:920px; margin:0 auto; }
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:20px;
+    border-bottom:2px solid var(--mustard);
+    padding-bottom:18px;
+    margin-bottom:36px;
+    flex-wrap:wrap;
+  }
+
+  .eyebrow{
+    font-family:'Courier New', monospace;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--mustard);
+    margin:0 0 6px;
+  }
+
+  h1{
+    font-family:'Georgia','Times New Roman',serif;
+    font-weight:700;
+    font-size:38px;
+    letter-spacing:0.01em;
+    margin:0;
+    color:var(--paper);
+  }
+
+  .count-badge{
+    font-family:'Courier New', monospace;
+    font-size:13px;
+    color:var(--bg);
+    background:var(--paper);
+    padding:8px 14px;
+    border-radius:2px;
+    white-space:nowrap;
+  }
+  .count-badge b{ color:var(--red-stamp); font-size:15px; }
+
+  section.card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:3px;
+    padding:28px;
+    margin-bottom:32px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    position:relative;
+  }
+
+  section.card::before{
+    content:"";
+    position:absolute;
+    top:0; left:24px; right:24px;
+    height:1px;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 12px);
+    opacity:0.15;
+  }
+
+  h2{
+    font-family:'Georgia','Times New Roman',serif;
+    font-size:20px;
+    margin:0 0 20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  h2 .tag-no{
+    font-family:'Courier New', monospace;
+    font-size:12px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:3px 8px;
+    border-radius:2px;
+  }
+
+  form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px 20px;
+  }
+  form .full{ grid-column:1 / -1; }
+
+  label{
+    display:block;
+    font-family:'Courier New', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink);
+    opacity:0.65;
+    margin-bottom:6px;
+  }
+
+  input[type=text], textarea{
+    width:100%;
+    border:none;
+    border-bottom:1.5px solid var(--line);
+    background:transparent;
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    padding:8px 2px;
+    outline:none;
+    transition:border-color 0.15s ease;
+  }
+  input[type=text]:focus, textarea:focus{ border-color:var(--teal); }
+  textarea{ resize:vertical; min-height:56px; }
+
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding-top:4px;
+  }
+  .switch{
+    position:relative;
+    width:46px; height:24px;
+    flex:0 0 auto;
+  }
+  .switch input{ opacity:0; width:0; height:0; }
+  .slider{
+    position:absolute; inset:0;
+    background:#c9c2ac;
+    border-radius:24px;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .slider::before{
+    content:"";
+    position:absolute;
+    height:18px; width:18px;
+    left:3px; top:3px;
+    background:var(--paper);
+    border-radius:50%;
+    transition:transform 0.15s ease;
+  }
+  .switch input:checked + .slider{ background:var(--teal); }
+  .switch input:checked + .slider::before{ transform:translateX(22px); }
+  .toggle-label{ font-size:14px; font-weight:600; }
+
+  button{
+    font-family:'Courier New', monospace;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-size:13px;
+    font-weight:700;
+    border:none;
+    border-radius:2px;
+    padding:12px 22px;
+    cursor:pointer;
+    transition:transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  button:active{ transform:translateY(1px); }
+
+  .btn-primary{
+    background:var(--ink);
+    color:var(--mustard);
+  }
+  .btn-primary:hover{ box-shadow:0 4px 14px rgba(0,0,0,0.25); }
+
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1.5px solid var(--ink);
+  }
+
+  .form-actions{
+    grid-column:1 / -1;
+    display:flex;
+    gap:12px;
+    justify-content:flex-end;
+    margin-top:6px;
+  }
+
+  #status-msg{
+    grid-column:1/-1;
+    font-family:'Courier New', monospace;
+    font-size:12.5px;
+    min-height:1em;
+  }
+  #status-msg.ok{ color:var(--teal); }
+  #status-msg.err{ color:var(--red-stamp); }
+
+  .tags{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:22px;
+  }
+
+  .tag{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:2px 10px 10px 2px;
+    padding:20px 20px 18px 30px;
+    position:relative;
+    box-shadow:0 10px 24px rgba(0,0,0,0.3);
+  }
+
+  /* perforated notches on the left edge, like a hanging price tag */
+  .tag::before{
+    content:"";
+    position:absolute;
+    left:-1px; top:12px; bottom:12px;
+    width:14px;
+    background-image: radial-gradient(circle 5px at 0 50%, var(--bg) 5px, transparent 5.5px);
+    background-repeat:repeat-y;
+    background-size:14px 22px;
+  }
+  .tag::after{
+    content:"";
+    position:absolute;
+    left:12px; top:20px;
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--bg);
+    box-shadow: inset 0 0 0 1.5px var(--paper-dark);
+  }
+
+  .tag-id{
+    font-family:'Courier New', monospace;
+    font-size:11px;
+    opacity:0.55;
+    margin:0 0 6px;
+  }
+
+  .tag-name{
+    font-family:'Georgia','Times New Roman',serif;
+    font-size:19px;
+    font-weight:700;
+    margin:0 0 8px;
+    line-height:1.25;
+  }
+
+  .tag-desc{
+    font-size:13.5px;
+    line-height:1.5;
+    opacity:0.82;
+    margin:0 0 16px;
+    min-height:20px;
+  }
+
+  .tag-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  .stamp{
+    font-family:'Courier New', monospace;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:5px 10px;
+    border-radius:3px;
+    transform:rotate(-3deg);
+    border:1.5px solid currentColor;
+  }
+  .stamp.in{ color:var(--teal); }
+  .stamp.out{ color:var(--red-stamp); }
+
+  .tag-actions{ display:flex; gap:8px; }
+  .icon-btn{
+    background:transparent;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+    padding:6px 10px;
+    font-family:'Courier New', monospace;
+    font-size:11px;
+  }
+  .icon-btn:hover{ border-color:var(--ink); }
+  .icon-btn.danger:hover{ border-color:var(--red-stamp); color:var(--red-stamp); }
+
+  .empty-state{
+    grid-column:1/-1;
+    text-align:center;
+    padding:50px 20px;
+    color:var(--paper);
+    opacity:0.6;
+    font-family:'Courier New', monospace;
+    font-size:13px;
+  }
+
+  footer{
+    text-align:center;
+    margin-top:50px;
+    font-family:'Courier New', monospace;
+    font-size:11px;
+    color:var(--paper);
+    opacity:0.4;
+  }
+
+  @media (max-width:560px){
+    form{ grid-template-columns:1fr; }
+    h1{ font-size:28px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <p class="eyebrow">Stock Room / Catalog No. 001</p>
+        <h1>Product Ledger</h1>
+      </div>
+      <div class="count-badge"><b id="count">0</b> items on file</div>
+    </header>
+
+    <section class="card">
+      <h2><span class="tag-no">NEW</span> Add a product</h2>
+      <form id="product-form">
+        <input type="hidden" id="edit-id" value="" />
+        <div>
+          <label for="productName">Product name</label>
+          <input type="text" id="productName" required placeholder="e.g. Field Notebook" />
+        </div>
+        <div>
+          <label for="forSale">Availability</label>
+          <div class="toggle-row">
+            <label class="switch">
+              <input type="checkbox" id="forSale" checked />
+              <span class="slider"></span>
+            </label>
+            <span class="toggle-label" id="forSaleLabel">For sale</span>
+          </div>
+        </div>
+        <div class="full">
+          <label for="description">Description</label>
+          <textarea id="description" placeholder="What is it, what's it for..."></textarea>
+        </div>
+        <div id="status-msg"></div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="cancel-edit" style="display:none;">Cancel edit</button>
+          <button type="submit" class="btn-primary" id="submit-btn">Stamp it in</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2><span class="tag-no">LOG</span> Catalog</h2>
+      <div class="tags" id="tags-container">
+        <div class="empty-state">No products on file yet — add one above.</div>
+      </div>
+    </section>
+
+    <footer>served from products.json &middot; local file storage</footer>
+  </div>
+
+<script>
+const API_BASE = '/api/v1';
+
+const form = document.getElementById('product-form');
+const tagsContainer = document.getElementById('tags-container');
+const countEl = document.getElementById('count');
+const statusMsg = document.getElementById('status-msg');
+const editIdField = document.getElementById('edit-id');
+const submitBtn = document.getElementById('submit-btn');
+const cancelBtn = document.getElementById('cancel-edit');
+const forSaleCheckbox = document.getElementById('forSale');
+const forSaleLabel = document.getElementById('forSaleLabel');
+
+forSaleCheckbox.addEventListener('change', () => {
+  forSaleLabel.textContent = forSaleCheckbox.checked ? 'For sale' : 'Not for sale';
+});
+
+function showStatus(text, isError){
+  statusMsg.textContent = text;
+  statusMsg.className = isError ? 'err' : 'ok';
+  if (text) {
+    setTimeout(() => { statusMsg.textContent = ''; statusMsg.className=''; }, 3500);
+  }
+}
+
+async function fetchProducts(){
+  try{
+    const res = await fetch(`${API_BASE}/getproducts`);
+    if (!res.ok) throw new Error('Failed to load products');
+    const products = await res.json();
+    renderProducts(products);
+  }catch(err){
+    tagsContainer.innerHTML = `<div class="empty-state">Could not reach the server. Is the backend running?</div>`;
+    countEl.textContent = '0';
+  }
+}
+
+function renderProducts(products){
+  countEl.textContent = products.length;
+
+  if (!products.length){
+    tagsContainer.innerHTML = `<div class="empty-state">No products on file yet — add one above.</div>`;
+    return;
+  }
+
+  tagsContainer.innerHTML = products.map(p => `
+    <div class="tag" data-id="${p.id}">
+      <p class="tag-id">TAG #${String(p.id).padStart(4,'0')}</p>
+      <p class="tag-name">${escapeHtml(p.productName || '(untitled)')}</p>
+      <p class="tag-desc">${escapeHtml(p.description || '')}</p>
+      <div class="tag-footer">
+        <span class="stamp ${p.forSale ? 'in' : 'out'}">${p.forSale ? 'In Stock' : 'Sold Out'}</span>
+        <div class="tag-actions">
+          <button class="icon-btn" onclick="startEdit(${p.id})">Edit</button>
+          <button class="icon-btn danger" onclick="deleteProduct(${p.id})">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+let allProductsCache = [];
+
+async function startEdit(id){
+  try{
+    const res = await fetch(`${API_BASE}/product/${id}`);
+    if (!res.ok) throw new Error('Not found');
+    const p = await res.json();
+    editIdField.value = p.id;
+    document.getElementById('productName').value = p.productName || '';
+    document.getElementById('description').value = p.description || '';
+    forSaleCheckbox.checked = !!p.forSale;
+    forSaleLabel.textContent = forSaleCheckbox.checked ? 'For sale' : 'Not for sale';
+    submitBtn.textContent = 'Save changes';
+    cancelBtn.style.display = 'inline-block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }catch(err){
+    showStatus('Could not load that product for editing.', true);
+  }
+}
+
+cancelBtn.addEventListener('click', () => {
+  resetForm();
+});
+
+function resetForm(){
+  form.reset();
+  editIdField.value = '';
+  submitBtn.textContent = 'Stamp it in';
+  cancelBtn.style.display = 'none';
+  forSaleCheckbox.checked = true;
+  forSaleLabel.textContent = 'For sale';
+}
+
+async function deleteProduct(id){
+  if (!confirm('Remove this product from the ledger?')) return;
+  try{
+    const res = await fetch(`${API_BASE}/deleteproduct/${id}`, { method:'DELETE' });
+    if (!res.ok) throw new Error('Delete failed');
+    showStatus('Product removed.', false);
+    fetchProducts();
+  }catch(err){
+    showStatus('Could not delete that product.', true);
+  }
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const payload = {
+    productName: document.getElementById('productName').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    forSale: forSaleCheckbox.checked ? 1 : 0
+  };
+
+  const editingId = editIdField.value;
+  const isEditing = editingId !== '';
+
+  try{
+    let res;
+    if (isEditing){
+      payload.id = parseInt(editingId, 10);
+      res = await fetch(`${API_BASE}/updateproduct`, {
+        method:'PUT',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      payload.id = 0;
+      res = await fetch(`${API_BASE}/addproduct`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+    if (!res.ok) throw new Error('Save failed');
+
+    showStatus(isEditing ? 'Product updated.' : 'Product added.', false);
+    resetForm();
+    fetchProducts();
+  }catch(err){
+    showStatus('Something went wrong saving that product.', true);
+  }
+});
+
+fetchProducts();
+</script>
+</body>
+</html>
