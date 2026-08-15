@@ -1,0 +1,12 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: springboot-application
+  namespace: argocd
+spec:
+  project: default
+  sorce:
+    repoURL: https://github.com/yuthikaVJ/End-to-End-Devops-Project-springboot-eks.git
+    targetRevision: main
+    path: helm/spring-boot-app
+    
