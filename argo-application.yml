@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  sorce:
+  source:
     repoURL: https://github.com/yuthikaVJ/End-to-End-Devops-Project-springboot-eks.git
     targetRevision: main
     path: helm/spring-boot-app
