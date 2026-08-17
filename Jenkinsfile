@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Build Docker Image'){
             steps {
-                sh 'docker build -t springboot-app:latest -f ./springboot-app/Dockerfile .'
+                 sh 'docker build -t springboot-app:latest -f ./springboot-app/Dockerfile ./springboot-app'
             }
         }
 
