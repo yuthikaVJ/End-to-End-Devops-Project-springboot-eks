@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'yuthikavj31545/docker-agent:v1'
-            args '--user root -v /var/run/docker.sock:/var/docker.sock'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }  
     }
     stages {
