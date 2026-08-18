@@ -13,7 +13,7 @@ pipeline {
         GIT_REPO_NAME = "End-to-End-Devops-Project-springboot-eks"
         GIT_USERNAME = "yuthikaVJ"
 
-        HELM_VALUES_FILE = "End-to-End-Devops-Project-springboot-eks/blob/main/helm/spring-boot-app/values.yaml"
+        HELM_VALUES_FILE = "helm/spring-boot-app/values.yaml"
     }
     stages {
 
