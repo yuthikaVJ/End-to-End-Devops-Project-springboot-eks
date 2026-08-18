@@ -93,6 +93,11 @@ pipeline {
                     )
                 ]) {
                     sh '''
+                         echo "Current directory:"
+                        pwd
+
+                        echo "Git status:"
+                        git status
                         git config user.email "yuthikavjl@gmail.com"
                         git config user.name "yuthikaVJ"
 
