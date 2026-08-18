@@ -77,9 +77,10 @@ pipeline {
                 sh '''
                    echo "Updating Helm values file with new Docker image tag"
 
-                   "s/tag: \".*\"/tag: \"${BUILD_NUMBER}\"/" ${HELM_VALUES_FILE}
-                    echo "Updated values.yaml:"
-                    cat ${HELM_VALUES_FILE}
+                    sed -i "s/tag: .*/tag: ${BUILD_NUMBER}/" \
+                    helm/spring-boot-app/values.yaml
+
+                    cat helm/spring-boot-app/values.yaml
                 '''
             }
         }
