@@ -106,6 +106,8 @@ pipeline {
                           HEAD:main
                     '''
                 }
+            }
+        }
 
 
     }
