@@ -71,6 +71,42 @@ pipeline {
                 }
             }
         }
+        stage('Update Helm Values'){
+            steps {
+                echo "Updating Helm values file with new Docker image tag"
+                sh '''
+                   echo "Updating Helm values file with new Docker image tag"
+
+                   "s/tag: \".*\"/tag: \"${BUILD_NUMBER}\"/" ${HELM_VALUES_FILE}
+                    echo "Updated values.yaml:"
+                    cat ${HELM_VALUES_FILE}
+                '''
+            }
+        }
+         stage('Commit and Push Helm Changes') {
+            steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'github',
+                        variable: 'GITHUB_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        git config user.email "yuthikaofficial@gmail.com"
+                        git config user.name "eks-jenkins"
+
+                        git add ${HELM_VALUES_FILE}
+
+                        git commit \
+                          -m "Update Helm image tag to ${BUILD_NUMBER}" \
+                          || echo "No changes to commit"
+
+                        git push \
+                          https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git \
+                          HEAD:main
+                    '''
+                }
+
 
     }
 }
