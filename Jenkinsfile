@@ -94,7 +94,8 @@ pipeline {
                 ]) {
                     sh '''
                          echo "Current directory:"
-                        pwd
+                         pwd
+                         git config --global --add safe.directory /var/lib/jenkins/workspace/eks
 
                         echo "Git status:"
                         git status
