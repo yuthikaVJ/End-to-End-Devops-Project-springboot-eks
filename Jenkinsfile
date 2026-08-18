@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "yuthikavj31545/spring-boot-app:${BUILD_NUMBER}"
-        SONARQUBE_URL = "http://localhost:9000"
+        SONARQUBE_URL = "http://13.212.167.198:9000"
 
         GIT_REPO_NAME = "End-to-End-Devops-Project-springboot-eks"
         GIT_USERNAME = "yuthikaVJ"
