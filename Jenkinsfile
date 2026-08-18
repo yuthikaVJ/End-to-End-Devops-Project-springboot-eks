@@ -38,10 +38,12 @@ pipeline {
                         variable: 'SONAR_AUTH_TOKEN'
                     )
                 ]){
-                    sh ```cd springboot-app &&
-                    mvn sonar: sonar 
-                    -Dsonar.projectKey=springboot-app 
-                    -Dsonar.host.url=${SONARQUBE_URL} ```
+                    sh ```cd springboot-app 
+                        mvn sonar: sonar 
+                        -Dsonar.projectKey=springboot-app  \
+                        -Dsonar.login=$SONAR_AUTH_TOKEN \
+                        -Dsonar.host.url=${SONARQUBE_URL} 
+                    ```
                     
                 }
             }
