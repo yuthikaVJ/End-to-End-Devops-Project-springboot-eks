@@ -93,8 +93,8 @@ pipeline {
                     )
                 ]) {
                     sh '''
-                        git config user.email "yuthikaofficial@gmail.com"
-                        git config user.name "eks-jenkins"
+                        git config user.email "yuthikavjl@gmail.com"
+                        git config user.name "yuthikaVJ"
 
                         git add ${HELM_VALUES_FILE}
 
