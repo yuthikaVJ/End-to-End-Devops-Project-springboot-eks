@@ -6,9 +6,9 @@ image:
   tag: latest
 
 service: 
-  type: ClusterIP
-  port: 8080
-  targetPort: 8080
+  type: LoadBalancer
+  port: 5000
+  targetPort: 5000
 
 containerPort: 8080
 
