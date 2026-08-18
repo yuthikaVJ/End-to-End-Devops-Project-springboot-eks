@@ -1,17 +1,17 @@
 pipeline {
     agent {
         docker {
-            image 'yuthikavj31545/docker-agent:v1'
+            image 'xxxx/docker-agent:v1'
             args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }  
     }
 
     environment {
-        DOCKER_IMAGE = "yuthikavj31545/spring-boot-app:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "xxx/xxx:${BUILD_NUMBER}"
         SONARQUBE_URL = "http://13.212.167.198:9000"
 
         GIT_REPO_NAME = "End-to-End-Devops-Project-springboot-eks"
-        GIT_USER_NAME = "yuthikaVJ"
+        GIT_USER_NAME = "xxx"
 
         HELM_VALUES_FILE = "helm/spring-boot-app/values.yaml"
     }
@@ -99,8 +99,8 @@ pipeline {
 
                         echo "Git status:"
                         git status
-                        git config user.email "yuthikavjl@gmail.com"
-                        git config user.name "yuthikaVJ"
+                        git config user.email "xxx@gmail.com"
+                        git config user.name "xxx"
 
                         git add ${HELM_VALUES_FILE}
 
