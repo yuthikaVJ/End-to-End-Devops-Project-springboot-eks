@@ -38,12 +38,12 @@ pipeline {
                         variable: 'SONAR_AUTH_TOKEN'
                     )
                 ]){
-                    sh ```cd springboot-app 
-                        mvn sonar: sonar 
+                    sh 'cd springboot-app'
+                    sh   ' mvn sonar: sonar 
                         -Dsonar.projectKey=springboot-app  \
                         -Dsonar.login=$SONAR_AUTH_TOKEN \
-                        -Dsonar.host.url=${SONARQUBE_URL} 
-                    ```
+                        -Dsonar.host.url=${SONARQUBE_URL} '
+                    
                     
                 }
             }
@@ -52,10 +52,10 @@ pipeline {
 
         stage('Build Docker Image'){
             steps {
-                sh ```
-                    cd springboot-app &&
-                    docker build -t ${DOCKER_IMAGE} .
-                ```
+                
+                   sh ' cd springboot-app && docker build -t ${DOCKER_IMAGE} .'
+                    
+                
                  //sh 'docker build -t springboot-app:latest -f ./springboot-app/Dockerfile ./springboot-app'
             }
         }
