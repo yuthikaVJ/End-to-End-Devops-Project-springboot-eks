@@ -11,7 +11,7 @@ pipeline {
         SONARQUBE_URL = "http://13.212.167.198:9000"
 
         GIT_REPO_NAME = "End-to-End-Devops-Project-springboot-eks"
-        GIT_USERNAME = "yuthikaVJ"
+        GIT_USER_NAME = "yuthikaVJ"
 
         HELM_VALUES_FILE = "helm/spring-boot-app/values.yaml"
     }
